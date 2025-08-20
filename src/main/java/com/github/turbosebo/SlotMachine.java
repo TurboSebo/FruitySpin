@@ -4,12 +4,17 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class SlotMachine {
+    private static final int MAX_BET = 10; // maximum bet per spin
+    private static final int MIN_BET = 1; // minimum bet per spin
+    private static final int INITIAL_CREDITS=100; // Initial credits for the player
+
     private int credits;
-    private Scanner scanner = new Scanner(System.in);
-    private Random random = new Random();
+    private Scanner scanner;
+    private Random random;
+    Difficulty difficulty = Difficulty.MEDIUM;
 
     public SlotMachine(Scanner scanner) {
-        this.credits = 100;
+        this.credits = INITIAL_CREDITS;
         this.scanner = scanner;
         this.random = new Random();
     }
@@ -28,7 +33,6 @@ public class SlotMachine {
             //spin
             creditsWon = spin(bet);
             credits = credits + creditsWon;
-            System.out.println("have "+credits);
         }
         System.out.println("Game over");
     }
@@ -56,7 +60,7 @@ public class SlotMachine {
             if (bet > credits) {
                 System.out.println("You do not have enough credits");
             }else if (bet <= 0 || bet > 10) {
-                System.out.println("You must select beetween 1 and 10");
+                System.out.println("You must select beetween "+ MIN_BET + " and "+ MAX_BET + " credits");
             }
         }while(bet <= 0 || bet > 10 || bet > credits);
         // System.out.println("you choose" + creditsForNextSpin);
@@ -75,38 +79,21 @@ public class SlotMachine {
 
         System.out.println("||\n--------------------");
         int creditsWon = 0;
+
+
         if (slots[0] == slots[1] && slots[1] == slots[2]){
             creditsWon = slots[0].getValue() * credits;
-            }
+
+        }
+        else if ((slots[0]==slots[1]||slots[1]==slots[2]) && !(Difficulty.HARD.equals(difficulty))) {
+            Symbol winningSymbol = null;
+            if (slots[0]==slots[1]) winningSymbol = slots[0];
+            else if (slots[1]==slots[2]) winningSymbol = slots[1];
+            if (winningSymbol != null) creditsWon = (winningSymbol.getValue() * credits)/2;
+        }
+
 
         System.out.println("You won: "+ creditsWon);
         return creditsWon;
     }
-     /*
-    static String intToSymbol(int number) {
-        String symbol = "";
-        switch (number) {
-            case 1:
-                symbol = "V";
-                break;
-            case 2:
-                symbol = "D";
-                break;
-            case 3:
-                symbol = "db";
-                break;
-            case 4:
-                symbol = "Ó";
-                break;
-            case 5:
-                symbol = "7";
-                break;
-            default:
-                symbol = "?";
-                break;
-        }
-        return symbol;
-    }
-
-     */
 }
