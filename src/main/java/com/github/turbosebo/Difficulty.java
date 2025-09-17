@@ -21,6 +21,15 @@ public enum Difficulty {
         return id;
     }
 
+    public static Difficulty setDifficulty(int level) {
+        return switch (level) {
+            case 1 -> EASY;
+            case 2 -> MEDIUM;
+            case 3 -> HARD;
+            default -> MEDIUM;
+        };
+    }
+
     public static Difficulty fromId(int number){
         return switch (number){
             case 1 ->EASY;

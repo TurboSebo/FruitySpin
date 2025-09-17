@@ -11,7 +11,7 @@ public class SlotMachine {
     private int credits;
     private Scanner scanner;
     private Random random;
-    Difficulty difficulty = Difficulty.MEDIUM;
+    Difficulty difficulty;
 
     public SlotMachine(Scanner scanner) {
         this.credits = INITIAL_CREDITS;
@@ -19,7 +19,10 @@ public class SlotMachine {
         this.random = new Random();
     }
 
-    public void play() {
+    public void play(int difficultyLevel) {
+        difficulty = Difficulty.setDifficulty(difficultyLevel);
+
+        ClearScreen.clearConsole();
         System.out.println("Game started");
         int creditsWon;
         displayRules();
@@ -38,12 +41,19 @@ public class SlotMachine {
     }
 
     public static void displayRules() {
+        Symbol[] symbols = Symbol.values();
+
+        for (int i = symbols.length - 1; i >= 0; i--) {
+            System.out.println(symbols[i].getRepresentation() + " - " + symbols[i] + " - "+ symbols[i].getValue()+"$");
+        }
+
+        /*
         System.out.println("7 - seven - 100$");
         System.out.println("Ó - orange - 50$");
         System.out.println("db -cherries -25$ ");
         System.out.println("D - watermelon - 5$");
         System.out.println("V - Strawberry - 1$");
-
+        */
     }
 
     private int getBet() {
