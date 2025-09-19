@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class SlotMachine {
-    private static final int MAX_BET = 10; // maximum bet per spin
+    private static final int MAX_BET = 5; // maximum bet per spin
     private static final int MIN_BET = 1; // minimum bet per spin
     private static final int INITIAL_CREDITS=100; // Initial credits for the player
 
@@ -33,11 +33,15 @@ public class SlotMachine {
 
             System.out.println("Press enter to spin");
             scanner.nextLine();
+            ClearScreen.clearConsole();
             //spin
             creditsWon = spin(bet);
             credits = credits + creditsWon;
         }
         System.out.println("Game over");
+        System.out.println("Press enter to go back to menu");
+        scanner.nextLine();
+        ClearScreen.clearConsole();
     }
 
     public static void displayRules() {
@@ -69,10 +73,10 @@ public class SlotMachine {
             scanner.nextLine(); // wyczyszczenie bufora po nextInt()
             if (bet > credits) {
                 System.out.println("You do not have enough credits");
-            }else if (bet <= 0 || bet > 10) {
+            }else if (bet < MIN_BET || bet > MAX_BET) {
                 System.out.println("You must select beetween "+ MIN_BET + " and "+ MAX_BET + " credits");
             }
-        }while(bet <= 0 || bet > 10 || bet > credits);
+        }while(bet <= MIN_BET || bet > MAX_BET || bet > credits);
         // System.out.println("you choose" + creditsForNextSpin);
         return bet;
     }
@@ -83,7 +87,10 @@ public class SlotMachine {
 
         System.out.println("--------------------");
         for (int i = 0; i < 3; i++) {
-            slots[i] = Symbol.fromInt(random.nextInt(5) + 1);
+            if(Difficulty.EASY.equals(difficulty)) slots[i] = Symbol.fromInt(random.nextInt(5) + 1);
+            else{
+                slots[i] = drawWeightedSymbol();
+            }
             System.out.print("|| "+slots[i].getRepresentation()  +" ");
         }
 
@@ -105,5 +112,15 @@ public class SlotMachine {
 
         System.out.println("You won: "+ creditsWon);
         return creditsWon;
+    }
+
+    private Symbol drawWeightedSymbol() {
+        int draw = random.nextInt(100); // Losuje liczbę od 0 do 99
+
+        if (draw < 30) return Symbol.STRAWBERRY; // 30% szansy (0-29)
+        else if (draw < 55) return Symbol.WATERMELON; // 25% szansy (30-54)
+        else if (draw < 75) return Symbol.CHERRIES; // 20% szansy (55-74)
+        else if (draw < 95) return Symbol.ORANGE; // 20% szansy (75-94)
+        else  return Symbol.SEVEN; // 5% szansy (95-99)
     }
 }

@@ -11,6 +11,14 @@ target/
 *.iws
 *.iml
 *.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+.idea/copilot.data.migration.ask.xml
+.idea/copilot.data.migration.ask2agent.xml
+.idea/copilotDiffState.xml
+.idea/copilot.data.migration.agent.xml
+.idea/copilot.data.migration.edit.xml
 
 ### Eclipse ###
 .apt_generated

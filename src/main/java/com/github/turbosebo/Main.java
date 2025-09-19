@@ -11,7 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         clearConsole();
         System.out.print("Slot machine java ");
-        System.out.println("v0.1.2 TurboSebo");
+        System.out.println("v0.2.0 TurboSebo");
         int choice;
         do {
             displayMenu();
@@ -23,6 +23,7 @@ public class Main {
             scanner.nextLine();
             if (choice == 1) {
                 System.out.println("Enter difficulty level: ");
+                System.out.println("(1) Easy\n(2) Medium\n(3) Hard" );
                 try {
                     int difficultyLevel = scanner.nextInt();
                     SlotMachine game = new SlotMachine(scanner);

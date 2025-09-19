@@ -27,9 +27,9 @@ package com.github.turbosebo;
 public enum Symbol {
     STRAWBERRY("V", 1),
     WATERMELON("D", 5),
-    CHERRIES("db", 25),
-    ORANGE("Ó", 50),
-    SEVEN("7", 100);
+    CHERRIES("db", 10),
+    ORANGE("Ó", 25),
+    SEVEN("7", 50);
 
     private final String representation;
     private final int value;
