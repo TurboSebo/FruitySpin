@@ -76,41 +76,55 @@ public class SlotMachine {
             }else if (bet < MIN_BET || bet > MAX_BET) {
                 System.out.println("You must select beetween "+ MIN_BET + " and "+ MAX_BET + " credits");
             }
-        }while(bet <= MIN_BET || bet > MAX_BET || bet > credits);
+        }while(bet < MIN_BET || bet > MAX_BET || bet > credits);
         // System.out.println("you choose" + creditsForNextSpin);
         return bet;
     }
 
     int spin(int credits) {
-        Symbol[] slots = new Symbol[3];
-        //Random rand = new Random();
+
+        int slotsNumber = 4;
+        if(Difficulty.EASY.equals(difficulty)) slotsNumber = 3;
+        Symbol[] slots = new Symbol[slotsNumber];
 
         System.out.println("--------------------");
-        for (int i = 0; i < 3; i++) {
-            if(Difficulty.EASY.equals(difficulty)) slots[i] = Symbol.fromInt(random.nextInt(5) + 1);
-            else{
-                slots[i] = drawWeightedSymbol();
-            }
+
+        for (int i = 0; i < slotsNumber; i++) {
+            //if(Difficulty.EASY.equals(difficulty)) slots[i] = Symbol.fromInt(random.nextInt(5) + 1);
+            //else slots[i] = drawWeightedSymbol();
+            slots[i] = drawWeightedSymbol();
             System.out.print("|| "+slots[i].getRepresentation()  +" ");
         }
 
         System.out.println("||\n--------------------");
-        int creditsWon = 0;
-
-
-        if (slots[0] == slots[1] && slots[1] == slots[2]){
-            creditsWon = slots[0].getValue() * credits;
-
-        }
-        else if ((slots[0]==slots[1]||slots[1]==slots[2]) && !(Difficulty.HARD.equals(difficulty))) {
-            Symbol winningSymbol = null;
-            if (slots[0]==slots[1]) winningSymbol = slots[0];
-            else if (slots[1]==slots[2]) winningSymbol = slots[1];
-            if (winningSymbol != null) creditsWon = (winningSymbol.getValue() * credits)/2;
-        }
+        int creditsWon = getCreditsWon(credits, slotsNumber, slots);
 
 
         System.out.println("You won: "+ creditsWon);
+        return creditsWon;
+    }
+
+    private static int getCreditsWon(int credits, int slotsNumber, Symbol[] slots) {
+        int creditsWon = 0;
+
+        boolean allTheSame = true;
+        int howMuchTheSameSlots = 0;
+        for (int i = 1; i < slotsNumber; i++) {
+            if(slots[i] == slots[0]) howMuchTheSameSlots++;
+            else allTheSame = false;
+        }
+
+        if (allTheSame==true) creditsWon = slots[0].getValue() * credits;  // if all the same - full win * bet
+        else if (allTheSame==false && slotsNumber == 3) {
+            if ((slots[0] == slots[1]) || (slots[1] == slots[2])) creditsWon = ((slots[0].getValue() * credits)/2);
+        }
+        else if (allTheSame==false && slotsNumber > 3) {
+            boolean mostTheSameSlot = true;
+            //for (int i = 1; i < slotsNumber; i++) {
+
+           // }
+        }
+        else creditsWon = 0;
         return creditsWon;
     }
 
