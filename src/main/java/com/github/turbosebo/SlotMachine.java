@@ -7,7 +7,7 @@ public class SlotMachine {
     private static final int MAX_BET = 5; // maximum bet per spin
     private static final int MIN_BET = 1; // minimum bet per spin
     private static final int INITIAL_CREDITS=100; // Initial credits for the player
-
+    private int slotsNumber = 4;
     private int credits;
     private Scanner scanner;
     private Random random;
@@ -21,7 +21,8 @@ public class SlotMachine {
 
     public void play(int difficultyLevel) {
         difficulty = Difficulty.setDifficulty(difficultyLevel);
-
+        if(Difficulty.EASY.equals(difficulty)) slotsNumber = 3;
+        else if(Difficulty.HARD.equals(difficulty)) slotsNumber = 5;
         ClearScreen.clearConsole();
         System.out.println("Game started");
         int creditsWon;
@@ -83,8 +84,8 @@ public class SlotMachine {
 
     int spin(int credits) {
 
-        int slotsNumber = 4;
-        if(Difficulty.EASY.equals(difficulty)) slotsNumber = 3;
+
+
         Symbol[] slots = new Symbol[slotsNumber];
 
         System.out.println("--------------------");
@@ -115,14 +116,26 @@ public class SlotMachine {
         }
 
         if (allTheSame==true) creditsWon = slots[0].getValue() * credits;  // if all the same - full win * bet
-        else if (allTheSame==false && slotsNumber == 3) {
-            if ((slots[0] == slots[1]) || (slots[1] == slots[2])) creditsWon = ((slots[0].getValue() * credits)/2);
-        }
-        else if (allTheSame==false && slotsNumber > 3) {
+       // else if (allTheSame==false && slotsNumber == 3) {
+         //   if ((slots[0] == slots[1]) || (slots[1] == slots[2])) creditsWon = ((slots[0].getValue() * credits)/2);}
+        else if (allTheSame==false && (slotsNumber >=3)) {
             boolean mostTheSameSlot = true;
-            //for (int i = 1; i < slotsNumber; i++) {
+            for (int i = 1; i < slotsNumber; i++) {
+                if (slots[i] != slots[0]){ mostTheSameSlot = false; break;}
 
-           // }
+            }
+            if (!mostTheSameSlot) {
+                mostTheSameSlot = true;
+            for (int i = slotsNumber - 1; i > 0; i--) {
+                if (slots[i] != slots[slotsNumber-1]){ mostTheSameSlot = false; break;}
+                }
+            }
+            if (!mostTheSameSlot){
+                if ((slotsNumber == 5) && (slots[1] == slots[2]) && (slots[2] == slots[3])) {
+                    creditsWon = ((slots[0].getValue() * credits)/3);
+                }
+            }
+            if (mostTheSameSlot == true) creditsWon = ((slots[0].getValue() * credits)/2);
         }
         else creditsWon = 0;
         return creditsWon;
