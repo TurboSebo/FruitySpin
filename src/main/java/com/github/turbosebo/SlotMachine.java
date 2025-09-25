@@ -1,5 +1,7 @@
 package com.github.turbosebo;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,8 +23,9 @@ public class SlotMachine {
 
     public void play(int difficultyLevel) {
         difficulty = Difficulty.setDifficulty(difficultyLevel);
-        if(Difficulty.EASY.equals(difficulty)) slotsNumber = 3;
-        else if(Difficulty.HARD.equals(difficulty)) slotsNumber = 5;
+
+        slotsNumber = difficulty.getSlotsNumber();
+
         ClearScreen.clearConsole();
         System.out.println("Game started");
         int creditsWon;
@@ -83,9 +86,6 @@ public class SlotMachine {
     }
 
     int spin(int credits) {
-
-
-
         Symbol[] slots = new Symbol[slotsNumber];
 
         System.out.println("--------------------");
@@ -106,8 +106,30 @@ public class SlotMachine {
     }
 
     private static int getCreditsWon(int credits, int slotsNumber, Symbol[] slots) {
-        int creditsWon = 0;
+        Map<Symbol, Integer> symbolCounts = new HashMap<>();
+        
+        for (Symbol symbol : slots) {
+            symbolCounts.put(symbol, symbolCounts.getOrDefault(symbol, 0) + 1);
+        }
 
+        //znajdź symbol z największą ilością wystąpień
+        Symbol bestSymbol = null;
+        int maxCount = 0;
+        for (Map.Entry<Symbol, Integer> entry: symbolCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                bestSymbol = entry.getKey();
+            }
+        }
+
+        //oblicz wygraną na podstawie wystąpienia identycznych symboli
+        if (maxCount >=2) {
+            double winMultiplier = (double) maxCount / slotsNumber;
+            return (int) (bestSymbol.getValue() * credits *winMultiplier);
+        }
+
+        return 0;
+        /*
         boolean allTheSame = true;
         int howMuchTheSameSlots = 0;
         for (int i = 1; i < slotsNumber; i++) {
@@ -139,6 +161,7 @@ public class SlotMachine {
         }
         else creditsWon = 0;
         return creditsWon;
+        */
     }
 
     private Symbol drawWeightedSymbol() {

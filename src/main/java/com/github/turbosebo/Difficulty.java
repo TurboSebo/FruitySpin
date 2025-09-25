@@ -1,16 +1,18 @@
 package com.github.turbosebo;
 
 public enum Difficulty {
-    EASY("Easy",1),
-    MEDIUM("Normal",2),
-    HARD("Hard",3);
+    EASY("Easy",1, 3),
+    MEDIUM("Normal",2,4),
+    HARD("Hard",3, 5), ;
 
     private final String displayName;
     private final int id;
+    private final int slotsNumber;
 
-    Difficulty(String name, int id) {
+    Difficulty(String name, int id, int slotsNumber) {
         this.displayName = name;
         this.id = id;
+        this.slotsNumber = slotsNumber;
     }
 
     public String getDisplayName() {
@@ -40,4 +42,7 @@ public enum Difficulty {
         };
     }
 
+    public int getSlotsNumber() {
+        return slotsNumber;
+    }
 }
