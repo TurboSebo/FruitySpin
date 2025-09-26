@@ -1,7 +1,5 @@
 package com.github.turbosebo;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -28,8 +26,10 @@ public class SlotMachine {
 
         ClearScreen.clearConsole();
         System.out.println("Game started");
+        System.out.println("Difficulty Selected: " + difficulty.getDisplayName());
         int creditsWon;
         displayRules();
+
         while (credits > 0) {
             int bet = getBet();
             System.out.println("Bet: " + bet);
@@ -38,7 +38,7 @@ public class SlotMachine {
             System.out.println("Press enter to spin");
             scanner.nextLine();
             ClearScreen.clearConsole();
-            //spin
+
             creditsWon = spin(bet);
             credits = credits + creditsWon;
         }
@@ -55,13 +55,6 @@ public class SlotMachine {
             System.out.println(symbols[i].getRepresentation() + " - " + symbols[i] + " - "+ symbols[i].getValue()+"$");
         }
 
-        /*
-        System.out.println("7 - seven - 100$");
-        System.out.println("Ó - orange - 50$");
-        System.out.println("db -cherries -25$ ");
-        System.out.println("D - watermelon - 5$");
-        System.out.println("V - Strawberry - 1$");
-        */
     }
 
     private int getBet() {
@@ -90,78 +83,32 @@ public class SlotMachine {
 
         System.out.println("--------------------");
 
+
         for (int i = 0; i < slotsNumber; i++) {
-            //if(Difficulty.EASY.equals(difficulty)) slots[i] = Symbol.fromInt(random.nextInt(5) + 1);
-            //else slots[i] = drawWeightedSymbol();
             slots[i] = drawWeightedSymbol();
-            System.out.print("|| "+slots[i].getRepresentation()  +" ");
+            System.out.print("|| ");
+            try {
+                Thread.sleep(300);
+            }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            System.out.print(slots[i].getRepresentation() + " ");
+
+        }
+        try {
+            Thread.sleep(500);
+        }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
         System.out.println("||\n--------------------");
-        int creditsWon = getCreditsWon(credits, slotsNumber, slots);
+        int creditsWon = WinningsCalculator.getCreditsWon(credits, slotsNumber, slots);
 
 
         System.out.println("You won: "+ creditsWon);
         return creditsWon;
-    }
-
-    private static int getCreditsWon(int credits, int slotsNumber, Symbol[] slots) {
-        Map<Symbol, Integer> symbolCounts = new HashMap<>();
-        
-        for (Symbol symbol : slots) {
-            symbolCounts.put(symbol, symbolCounts.getOrDefault(symbol, 0) + 1);
-        }
-
-        //znajdź symbol z największą ilością wystąpień
-        Symbol bestSymbol = null;
-        int maxCount = 0;
-        for (Map.Entry<Symbol, Integer> entry: symbolCounts.entrySet()) {
-            if (entry.getValue() > maxCount) {
-                maxCount = entry.getValue();
-                bestSymbol = entry.getKey();
-            }
-        }
-
-        //oblicz wygraną na podstawie wystąpienia identycznych symboli
-        if (maxCount >=2) {
-            double winMultiplier = (double) maxCount / slotsNumber;
-            return (int) (bestSymbol.getValue() * credits *winMultiplier);
-        }
-
-        return 0;
-        /*
-        boolean allTheSame = true;
-        int howMuchTheSameSlots = 0;
-        for (int i = 1; i < slotsNumber; i++) {
-            if(slots[i] == slots[0]) howMuchTheSameSlots++;
-            else allTheSame = false;
-        }
-
-        if (allTheSame==true) creditsWon = slots[0].getValue() * credits;  // if all the same - full win * bet
-       // else if (allTheSame==false && slotsNumber == 3) {
-         //   if ((slots[0] == slots[1]) || (slots[1] == slots[2])) creditsWon = ((slots[0].getValue() * credits)/2);}
-        else if (allTheSame==false && (slotsNumber >=3)) {
-            boolean mostTheSameSlot = true;
-            for (int i = 1; i < slotsNumber; i++) {
-                if (slots[i] != slots[0]){ mostTheSameSlot = false; break;}
-
-            }
-            if (!mostTheSameSlot) {
-                mostTheSameSlot = true;
-            for (int i = slotsNumber - 1; i > 0; i--) {
-                if (slots[i] != slots[slotsNumber-1]){ mostTheSameSlot = false; break;}
-                }
-            }
-            if (!mostTheSameSlot){
-                if ((slotsNumber == 5) && (slots[1] == slots[2]) && (slots[2] == slots[3])) {
-                    creditsWon = ((slots[0].getValue() * credits)/3);
-                }
-            }
-            if (mostTheSameSlot == true) creditsWon = ((slots[0].getValue() * credits)/2);
-        }
-        else creditsWon = 0;
-        return creditsWon;
-        */
     }
 
     private Symbol drawWeightedSymbol() {
