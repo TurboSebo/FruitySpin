@@ -33,16 +33,23 @@ public class SlotMachine {
         while (credits > 0) {
             int bet = getBet();
             System.out.println("Bet: " + bet);
-            credits -= bet;
+
 
             System.out.println("Press enter to spin");
-            scanner.nextLine();
+            String input = scanner.nextLine();
+            input = input.toLowerCase();
+            if (input.equals("quit")||input.equals("q")) {
+                break;
+            }
+            credits -= bet;
             ClearScreen.clearConsole();
 
             creditsWon = spin(bet);
             credits = credits + creditsWon;
         }
+        System.out.println("--------------------");
         System.out.println("Game over");
+        System.out.println("You have left with " + credits + "$");
         System.out.println("Press enter to go back to menu");
         try {
             scanner.nextLine();

@@ -11,7 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         clearConsole();
         System.out.print("Slot machine java ");
-        System.out.println("v0.2.3 (alpha) TurboSebo");
+        System.out.println("v0.2.4 (alpha) TurboSebo");
         int choice;
         do {
             displayMenu();
