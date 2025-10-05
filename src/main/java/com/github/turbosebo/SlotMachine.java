@@ -44,7 +44,11 @@ public class SlotMachine {
         }
         System.out.println("Game over");
         System.out.println("Press enter to go back to menu");
-        scanner.nextLine();
+        try {
+            scanner.nextLine();
+        } catch (Exception e) {
+            // Ignoruj błędy wejścia
+        }
         ClearScreen.clearConsole();
     }
 
@@ -73,7 +77,7 @@ public class SlotMachine {
             }else if (bet < MIN_BET || bet > MAX_BET) {
                 System.out.println("You must select beetween "+ MIN_BET + " and "+ MAX_BET + " credits");
             }
-        }while(bet < MIN_BET || bet > MAX_BET || bet > credits);
+        }while(bet < MIN_BET || bet > MAX_BET || bet > credits || credits < MIN_BET);
         // System.out.println("you choose" + creditsForNextSpin);
         return bet;
     }
